@@ -17,6 +17,7 @@ function ClientesPage() {
     const [clienteEditar, setClienteEditar] = useState(null);
     const [cotizacionVer, setCotizacionVer] = useState(null);
     const [cotizacionEditar, setCotizacionEditar] = useState(null);
+    const [busqueda, setBusqueda] = useState("");
 
 
 
@@ -52,14 +53,20 @@ function ClientesPage() {
     async function cargarClientes() {
         try {
             const respuesta = await obtenerClientes();
-            
-            
+
+
             setClientes(respuesta.clientes);
 
         } catch (error) {
             console.error(error);
         }
     }
+
+    const clientesFiltrados = clientes.filter((cliente) =>
+        `${cliente.nombre} ${cliente.telefono} ${cliente.correo || ""}`
+            .toLowerCase()
+            .includes(busqueda.toLowerCase())
+    );
 
 
 
@@ -79,6 +86,16 @@ function ClientesPage() {
                 >
                     + Nuevo cliente
                 </button>
+            </div>
+
+            <div className="mt-6">
+                <input
+                    type="text"
+                    placeholder="Buscar por nombre, teléfono o correo..."
+                    value={busqueda}
+                    onChange={(e) => setBusqueda(e.target.value)}
+                    className="w-full md:max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+                />
             </div>
             <div className="mt-8 hidden md:block overflow-x-auto">
                 <table className="w-full min-w-[700px]">
@@ -106,7 +123,7 @@ function ClientesPage() {
                     </thead>
 
                     <tbody>
-                        {clientes.map((cliente) => (
+                        {clientesFiltrados.map((cliente) => (
                             <tr
                                 key={cliente._id}
                                 className="border-t border-gray-100 hover:bg-gray-50"
@@ -183,6 +200,17 @@ function ClientesPage() {
                                             </>
 
                                         )}
+
+                                        <button
+                                            onClick={() => {
+                                                setClienteEliminar(cliente);
+                                                setModalConfirmacion(true);
+                                            }}
+                                            className="p-2 rounded-lg hover:bg-red-100 text-red-600 cursor-pointer"
+                                            title="Eliminar cliente"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
 
                                     </div>
                                 </td>
@@ -389,6 +417,7 @@ function ClientesPage() {
                         setClienteEliminar(null);
                     }}
                     confirmar={borrarCliente}
+                    mensaje="Esta acción eliminará también las cotizaciones y trabajos asociados al cliente. No se puede deshacer."
                 />
 
             )}

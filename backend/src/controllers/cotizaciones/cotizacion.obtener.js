@@ -6,7 +6,7 @@ export const obtenerCotizaciones = async (req, res) => {
     try {
 
         const cotizaciones = await Cotizaciones.find()
-            .populate("cliente");
+            .populate("cliente").sort({ createdAt: -1 });
 
         if (cotizaciones.length === 0) {
             return res.status(404).json({

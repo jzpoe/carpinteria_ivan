@@ -6,8 +6,15 @@ import Trabajo from "../../models/trabajo.models.js";
 export const crearTrabajo = async (req, res) => {
     try {
 
-        const { cotizacion, cliente, mueble, valorVenta, gastos } = req.body;
-        
+        const {
+            cotizacion,
+            cliente,
+            mueble,
+            valorVenta,
+            gastos = [],
+            abonos = []
+        } = req.body;
+
 
         const verificarCliente = await Cliente.findById(cliente);
 
@@ -38,10 +45,34 @@ export const crearTrabajo = async (req, res) => {
             })
         }
 
-        const totalGastos = gastos.reduce((acumlador, item) => acumlador + item.valor, 0)
-        const ganancia = (valorVenta - totalGastos)
+        const totalGastos = gastos.reduce(
+            (acumulador, item) => acumulador + Number(item.valor),
+            0
+        );
 
-      
+        if (totalGastos > valorVenta) {
+            return res.status(400).json({
+                ok: false,
+                message: "El total de gastos no puede superar el valor de venta"
+            });
+        }
+
+        const totalAbonos = abonos.reduce(
+            (acumulador, item) => acumulador + Number(item.valor),
+            0
+        );
+
+        if (totalAbonos > valorVenta) {
+            return res.status(400).json({
+                ok: false,
+                message: "El total de abonos no puede superar el valor de venta"
+            });
+        }
+
+        const ganancia = valorVenta - totalGastos;
+        const saldo = valorVenta - totalAbonos;
+
+
 
 
         const nuevoTrabajo = new Trabajo({
@@ -49,7 +80,8 @@ export const crearTrabajo = async (req, res) => {
             cliente,
             mueble,
             valorVenta,
-            gastos
+            gastos,
+            abonos
         })
 
         await nuevoTrabajo.save()
@@ -59,9 +91,10 @@ export const crearTrabajo = async (req, res) => {
             message: "El trabajo fue guardado con éxito",
             nuevoTrabajo,
             totalGastos,
-            ganancia
-
-        })
+            totalAbonos,
+            ganancia,
+            saldo
+        });
 
 
 

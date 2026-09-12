@@ -1,5 +1,5 @@
 
-function ModalConfirmacion({ cerrar, confirmar }) {
+function ModalConfirmacion({ cerrar, confirmar, mensaje  }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
 
@@ -10,8 +10,8 @@ function ModalConfirmacion({ cerrar, confirmar }) {
         </h2>
 
         <p className="mt-2 text-gray-600">
-          Esta acción no se puede deshacer.
-        </p>
+  {mensaje || "Esta acción no se puede deshacer."}
+</p>
 
         <div className="flex justify-end gap-3 mt-6">
 

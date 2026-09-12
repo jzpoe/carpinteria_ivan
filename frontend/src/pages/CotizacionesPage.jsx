@@ -17,6 +17,7 @@ function CotizacionesPage({ cerrarModal, cargarClientes }) {
     const [cotizacionVer, setCotizacionVer] = useState(null);
     const [trabajoSeleccionado, setTrabajoSeleccionado] = useState(null);
     const [trabajos, setTrabajos] = useState([]);
+    const [busqueda, setBusqueda] = useState("");
 
 
 
@@ -98,26 +99,64 @@ function CotizacionesPage({ cerrarModal, cargarClientes }) {
         if (!trabajo) {
             return {
                 gastos: 0,
-                ganancia: 0
+                ganancia: 0,
+                abonado: 0,
+                saldo: 0
             };
         }
 
         const totalGastos = (trabajo.gastos || []).reduce(
-            (total, gasto) => total + gasto.valor,
+            (total, gasto) => total + Number(gasto.valor),
+            0
+        );
+
+        const totalAbonado = (trabajo.abonos || []).reduce(
+            (total, abono) => total + Number(abono.valor),
             0
         );
 
         const ganancia = trabajo.valorVenta - totalGastos;
 
+        const saldo = trabajo.valorVenta - totalAbonado;
+
         return {
             gastos: totalGastos,
-            ganancia
+            ganancia,
+            abonado: totalAbonado,
+            saldo
         };
     }
+
+    const cotizacionesFiltradas = cotizaciones.filter((cotizacion) =>
+        `${cotizacion.cliente?.nombre || ""} ${cotizacion.nombreMueble} ${cotizacion.estado}`
+            .toLowerCase()
+            .includes(busqueda.toLowerCase())
+    );
 
 
     return (
         <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+
+            <div className="px-6 py-5 border-b border-gray-100">
+                <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+                    Cotizaciones
+                </h1>
+
+                <p className="mt-1 text-sm text-gray-500">
+                    Consulta y administra las cotizaciones de tus clientes
+                </p>
+            </div>
+
+            <div className="px-6 py-4 bg-gray-50">
+                <input
+                    type="text"
+                    placeholder="Buscar por cliente, mueble o estado..."
+                    value={busqueda}
+                    onChange={(e) => setBusqueda(e.target.value)}
+                    className="w-full md:max-w-md px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+                />
+            </div>
+
 
             <div className="hidden md:block overflow-x-auto">
                 <table className="w-full">
@@ -137,12 +176,21 @@ function CotizacionesPage({ cerrarModal, cargarClientes }) {
                             </th>
 
                             <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600">
+                                Abonado
+                            </th>
+
+                            <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600">
+                                Saldo
+                            </th>
+
+                            <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600">
                                 Gastos
                             </th>
 
                             <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600">
                                 Ganancia
                             </th>
+
 
                             <th className="text-right px-6 py-4 text-sm font-semibold text-gray-600">
                                 Acciones
@@ -155,7 +203,7 @@ function CotizacionesPage({ cerrarModal, cargarClientes }) {
                     </thead>
 
                     <tbody>
-                        {cotizaciones.map((cotizacion) => {
+                        {cotizacionesFiltradas.map((cotizacion) => {
                             const datosTrabajo = obtenerDatosTrabajo(cotizacion);
                             return (
                                 <tr
@@ -174,6 +222,18 @@ function CotizacionesPage({ cerrarModal, cargarClientes }) {
                                     <td className="px-6 py-4 text-gray-600">
                                         ${cotizacion.valor.toLocaleString("es-CO")}
                                     </td>
+                                    <td className="px-6 py-4 text-gray-600">
+                                        {cotizacion.estado === "Aceptada"
+                                            ? `$${datosTrabajo.abonado.toLocaleString("es-CO")}`
+                                            : "-"}
+                                    </td>
+
+                                    <td className="px-6 py-4 text-gray-600">
+                                        {cotizacion.estado === "Aceptada"
+                                            ? `$${datosTrabajo.saldo.toLocaleString("es-CO")}`
+                                            : "-"}
+                                    </td>
+
 
                                     <td className="px-6 py-4 text-gray-600">
                                         {(() => {
@@ -243,19 +303,19 @@ function CotizacionesPage({ cerrarModal, cargarClientes }) {
                                                     >
                                                         <Pencil size={18} />
                                                     </button>
-
-                                                    <button
-                                                        onClick={() => {
-                                                            setCotizacionSeleccionada(cotizacion);
-                                                            setModalConfirmacion(true);
-                                                        }}
-                                                        className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer"
-                                                        title="Eliminar cotización"
-                                                    >
-                                                        <Trash2 size={18} />
-                                                    </button>
                                                 </>
                                             )}
+
+                                            <button
+                                                onClick={() => {
+                                                    setCotizacionSeleccionada(cotizacion);
+                                                    setModalConfirmacion(true);
+                                                }}
+                                                className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer"
+                                                title="Eliminar cotización"
+                                            >
+                                                <Trash2 size={18} />
+                                            </button>
 
                                             <button
                                                 onClick={() => setCotizacionVer(cotizacion)}
@@ -351,10 +411,10 @@ function CotizacionesPage({ cerrarModal, cargarClientes }) {
 
                                 <span
                                     className={`px-3 py-1 rounded-full text-xs font-medium ${cotizacion.estado === "Aceptada"
-                                            ? "bg-green-100 text-green-700"
-                                            : cotizacion.estado === "Rechazada"
-                                                ? "bg-red-100 text-red-700"
-                                                : "bg-yellow-100 text-yellow-700"
+                                        ? "bg-green-100 text-green-700"
+                                        : cotizacion.estado === "Rechazada"
+                                            ? "bg-red-100 text-red-700"
+                                            : "bg-yellow-100 text-yellow-700"
                                         }`}
                                 >
                                     {cotizacion.estado}
@@ -387,6 +447,33 @@ function CotizacionesPage({ cerrarModal, cargarClientes }) {
                                 <p className="text-gray-900 font-medium">
                                     ${cotizacion.valor.toLocaleString("es-CO")}
                                 </p>
+
+
+
+                            </div>
+
+                            <div className="mt-4">
+                                <p className="text-sm text-gray-500">
+                                    Abonado
+                                </p>
+                                <td className="px-6 py-4 text-gray-600">
+                                    {cotizacion.estado === "Aceptada"
+                                        ? `$${datosTrabajo.abonado.toLocaleString("es-CO")}`
+                                        : "-"}
+                                </td>
+
+
+                            </div>
+                            <div className="mt-4">
+                                <p className="text-sm text-gray-500">
+                                    Saldo
+                                </p>
+
+                                <td className="px-6 py-4 text-gray-600">
+                                    {cotizacion.estado === "Aceptada"
+                                        ? `$${datosTrabajo.saldo.toLocaleString("es-CO")}`
+                                        : "-"}
+                                </td>
 
                             </div>
 
@@ -541,6 +628,11 @@ function CotizacionesPage({ cerrarModal, cargarClientes }) {
                 <ModalConfirmacion
                     cerrar={() => setModalConfirmacion(false)}
                     confirmar={() => borrarCotizacion(cotizacionSeleccionada._id)}
+                    mensaje={
+                        cotizacionSeleccionada?.estado === "Aceptada"
+                            ? "Esta cotización está aceptada. También se eliminarán el trabajo, gastos y abonos asociados. El cliente se conservará. Esta acción no se puede deshacer."
+                            : "Esta acción eliminará la cotización. El cliente se conservará. Esta acción no se puede deshacer."
+                    }
                 />
             )}
             {cotizacionEditar && (
@@ -562,13 +654,15 @@ function CotizacionesPage({ cerrarModal, cargarClientes }) {
                 <ModalTrabajo
                     trabajo={trabajoSeleccionado}
                     cerrar={() => setTrabajoSeleccionado(null)}
-                    guardarGastos={async (id, gastos) => {
+
+                    guardarGastos={async (id, gastos, abonos) => {
 
                         await actualizarTrabajo(id, {
-                            gastos
+                            gastos,
+                            abonos
                         });
 
-                        toast.success("Gastos guardados correctamente.");
+                        toast.success("Cambios guardados correctamente.");
 
                         await cargarTrabajos();
 

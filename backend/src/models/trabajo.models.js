@@ -33,7 +33,15 @@ const trabajoSchema = new mongoose.Schema({
                 required: true
             }
         }
+    ],
 
+    abonos: [
+        {
+            valor: {
+                type: Number,
+                required: true
+            }
+        }
     ]
 
 },

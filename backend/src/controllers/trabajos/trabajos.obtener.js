@@ -5,8 +5,9 @@ export const obtenerTrabajos = async (req, res) => {
 
     try {
         const trabajos = await Trabajo.find()
-        .populate("cliente")
-        .populate("cotizacion");
+            .populate("cliente")
+            .populate("cotizacion")
+            .sort({ createdAt: -1 });
 
         if (trabajos.length === 0) {
             return res.status(404).json({

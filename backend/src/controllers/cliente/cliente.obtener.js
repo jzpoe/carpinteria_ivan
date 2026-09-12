@@ -5,7 +5,7 @@ import Cotizaciones from "../../models/cotizacion.model.js";
 export const obtenerClientes = async (req, res) => {
     try {
 
-        const clientes = await Cliente.find();
+        const clientes = await Cliente.find().sort({ createdAt: -1 });
 
         if (clientes.length === 0) {
             return res.status(404).json({
