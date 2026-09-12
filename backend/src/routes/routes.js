@@ -13,6 +13,12 @@ import { aceptarCotizacion } from "../controllers/cotizaciones/aceptarCotizacion
 import { actualizarTrabajo } from "../controllers/trabajos/actualizarTrabajo.js";
 import { obtenerGanancias } from "../controllers/reportes/reportes.controllers.js";
 import { crearVenta, obtenerVentas } from "../controllers/venta/venta.controllers.js";
+import { crearInventario } from "../controllers/inventario/inventario.controller.js";
+import { registrarEntrada } from "../controllers/inventario/inventario.registrarEntrada.js";
+import { registrarSalida } from "../controllers/inventario/regitrar_salida_inventario.js";
+import { obtenerInventario } from "../controllers/inventario/obtener_inventario.js";
+import { actualizarInventario } from "../controllers/inventario/actualizar_inventario.js";
+import { eliminarInventario } from "../controllers/inventario/eliminar_inventario.js";
 
 
 const router = express.Router();
@@ -52,8 +58,18 @@ router.get("/reportes/ganancias", obtenerGanancias);
 router.post("/venta", crearVenta);
 router.get("/venta", obtenerVentas);
 
+// inventario
 
-obtenerTrabajos
+router.post("/inventario", crearInventario);
+
+router.put("/inventario/:id/entrada", registrarEntrada);
+router.put("/inventario/:id/salida", registrarSalida);
+router.get("/inventario", obtenerInventario);
+router.put("/inventario/:id", actualizarInventario);
+router.delete("/inventario/:id", eliminarInventario);
+
+
+
 
 
 
