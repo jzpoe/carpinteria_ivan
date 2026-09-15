@@ -154,24 +154,23 @@ function ModalTrabajo({ trabajo, cerrar, guardarGastos }) {
         await guardarGastos(trabajo._id, gastos, abonos);
     }
 
-    const totalAbonos = abonos.reduce(
-        (total, item) => total + Number(item.valor),
-        0
-    );
 
-    const saldoPendiente =
-        trabajo.valorVenta - totalAbonos;
-
-    const ganancia =
-        trabajo.valorVenta - totalGastos;
 
     const totalGastos = gastos.reduce(
         (total, gasto) => total + Number(gasto.valor),
         0
     );
 
-    const disponibleParaGastos =
-        trabajo.valorVenta - totalGastos;
+    const totalAbonos = abonos.reduce(
+        (total, abono) => total + Number(abono.valor),
+        0
+    );
+
+    const saldoPendiente = trabajo.valorVenta - totalAbonos;
+
+    const ganancia = trabajo.valorVenta - totalGastos;
+
+    const disponibleParaGastos = trabajo.valorVenta - totalGastos;
 
 
     return (
