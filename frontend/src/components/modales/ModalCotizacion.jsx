@@ -21,10 +21,54 @@ function ModalCotizacion({
         valorUnitario: ""
     });
 
+    const [muebles, setMuebles] = useState([]);
+    const [mensaje, setMensaje] = useState("");
+
+    const agregarMueble = () => {
+        if (!formulario.nombreMueble) {
+            toast.error("Ingresa el nombre del mueble");
+            return;
+        }
+
+        if (!formulario.cantidad || Number(formulario.cantidad) <= 0) {
+            toast.error("Ingresa una cantidad válida");
+            return;
+        }
+
+        if (!formulario.valorUnitario || Number(formulario.valorUnitario) <= 0) {
+            toast.error("Ingresa un valor unitario válido");
+            return;
+        }
+
+        const cantidad = Number(formulario.cantidad);
+        const valorUnitario = Number(formulario.valorUnitario);
+
+        const nuevoMueble = {
+            nombre: formulario.nombreMueble,
+            cantidad,
+            valorUnitario,
+            valor: cantidad * valorUnitario
+        };
+
+        setMuebles([...muebles, nuevoMueble]);
+
+        setFormulario({
+            ...formulario,
+            nombreMueble: "",
+            cantidad: 1,
+            valorUnitario: ""
+        });
+    };
+
+    const eliminarMueble = (index) => {
+        setMuebles(
+            muebles.filter((_, i) => i !== index)
+        );
+    };
+
 
     // Cargar datos cuando estamos editando
     useEffect(() => {
-
         if (cotizacionEditar) {
 
             setFormulario({
@@ -33,6 +77,10 @@ function ModalCotizacion({
                 cantidad: cotizacionEditar.cantidad || 1,
                 valorUnitario: cotizacionEditar.valorUnitario || ""
             });
+
+            setMuebles(
+                cotizacionEditar.muebles || []
+            );
 
         } else {
 
@@ -43,6 +91,7 @@ function ModalCotizacion({
                 valorUnitario: ""
             });
 
+            setMuebles([]);
         }
 
     }, [cotizacionEditar]);
@@ -62,45 +111,37 @@ function ModalCotizacion({
 
 
     // Calcular valor total
-    const valorTotal =
-        Number(formulario.cantidad || 0) *
-        Number(formulario.valorUnitario || 0);
+    const valorTotal = muebles.reduce(
+        (total, mueble) => total + mueble.valor,
+        0
+    );
 
 
     async function guardarCotizacion(e) {
 
         e.preventDefault();
 
-
-        if (
-            !formulario.nombreMueble ||
-            !formulario.descripcion ||
-            !formulario.cantidad ||
-            !formulario.valorUnitario
-        ) {
-
-            toast.error("Por favor, completa todos los campos.");
-
+        if (muebles.length === 0) {
+            toast.error("Agrega al menos un mueble a la cotización.");
             return;
         }
 
+        if (!formulario.descripcion) {
+            toast.error("Por favor, completa la descripción.");
+            return;
+        }
+
+        const valorTotal = muebles.reduce(
+            (total, mueble) => total + mueble.valor,
+            0
+        );
 
         const datosCotizacion = {
-
-            nombreMueble: formulario.nombreMueble,
-
             cliente: cliente._id,
-
             descripcion: formulario.descripcion,
-
-            cantidad: Number(formulario.cantidad),
-
-            valorUnitario: Number(formulario.valorUnitario),
-
+            muebles: muebles,
             valor: valorTotal
-
         };
-
 
         try {
 
@@ -124,12 +165,10 @@ function ModalCotizacion({
                 toast.success(
                     "¡Cotización creada con éxito!"
                 );
-
             }
-            
+
             await cargarClientes();
             cerrarModal();
-
 
         } catch (error) {
 
@@ -146,11 +185,8 @@ function ModalCotizacion({
                 toast.error(
                     "Ocurrió un error al crear la cotización."
                 );
-
             }
-
         }
-
     }
 
 
@@ -290,6 +326,65 @@ function ModalCotizacion({
 
                         </div>
 
+                        <button
+                            type="button"
+                            onClick={agregarMueble}
+                            className="w-full bg-gray-200 text-gray-900 py-2 rounded-lg hover:bg-gray-300 cursor-pointer"
+                        >
+                            + Agregar mueble
+                        </button>
+
+                        {muebles.length > 0 && (
+                            <div className="mt-4 border border-gray-200 rounded-lg p-4">
+
+                                <h3 className="font-semibold mb-3">
+                                    Muebles agregados
+                                </h3>
+
+                                <div className="space-y-2">
+
+                                    {muebles.map((mueble, index) => (
+                                        <div
+                                            key={index}
+                                            className="flex justify-between items-center border-b border-gray-200 pb-2"
+                                        >
+
+                                            <div>
+                                                <p className="font-medium">
+                                                    {mueble.nombre}
+                                                </p>
+
+                                                <p className="text-sm text-gray-500">
+                                                    {mueble.cantidad} × $
+                                                    {mueble.valorUnitario.toLocaleString("es-CO")}
+                                                </p>
+                                            </div>
+
+                                            <div className="flex items-center gap-4">
+
+                                                <p className="font-semibold">
+                                                    $
+                                                    {mueble.valor.toLocaleString("es-CO")}
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => eliminarMueble(index)}
+                                                    className="text-red-500 hover:text-red-700 cursor-pointer"
+                                                    title="Eliminar mueble"
+                                                >
+                                                    🗑️
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+                                    ))}
+                                </div>
+
+                            </div>
+                        )}
+
 
                     </div>
 
@@ -297,18 +392,18 @@ function ModalCotizacion({
                     {/* Valor total */}
 
                     <div>
-
-                        <label className="block mb-1 text-sm font-medium">
+                        <label className="block mb-1">
                             Valor total de la cotización
                         </label>
 
                         <input
                             type="text"
-                            value={`$${valorTotal.toLocaleString("es-CO")}`}
+                            value={`$${muebles
+                                .reduce((total, mueble) => total + mueble.valor, 0)
+                                .toLocaleString("es-CO")}`}
                             readOnly
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-50 font-semibold text-gray-900"
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-100"
                         />
-
                     </div>
 
 

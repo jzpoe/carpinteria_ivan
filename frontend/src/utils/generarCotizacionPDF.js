@@ -8,13 +8,23 @@ export const generarCotizacionPDF = async (cotizacion) => {
     // DATOS PRINCIPALES
     // ==========================================
 
-    const cantidad = Number(cotizacion.cantidad || 1);
+    const muebles = cotizacion.muebles?.length
+        ? cotizacion.muebles
+        : [
+            {
+                nombre: cotizacion.nombreMueble || "No especificado",
+                cantidad: Number(cotizacion.cantidad || 1),
+                valorUnitario: Number(
+                    cotizacion.valorUnitario || cotizacion.valor || 0
+                ),
+                valor: Number(cotizacion.valor || 0)
+            }
+        ];
 
-    const valorUnitario = Number(
-        cotizacion.valorUnitario || cotizacion.valor || 0
+    const valorTotal = muebles.reduce(
+        (total, mueble) => total + Number(mueble.valor || 0),
+        0
     );
-
-    const valorTotal = cantidad * valorUnitario;
 
     const fecha = cotizacion.createdAt
         ? new Date(cotizacion.createdAt).toLocaleDateString("es-CO")
@@ -211,28 +221,30 @@ export const generarCotizacionPDF = async (cotizacion) => {
 
 
                     <tbody>
+    ${muebles.map((mueble) => `
+        <tr>
+            <td>
+                ${mueble.nombre || "No especificado"}
+            </td>
 
-                        <tr>
+            <td>
+                ${Number(mueble.cantidad || 0)}
+            </td>
 
-                            <td>
-                                ${cotizacion.nombreMueble || "No especificado"}
-                            </td>
+            <td>
+                $${Number(
+        mueble.valorUnitario || 0
+    ).toLocaleString("es-CO")}
+            </td>
 
-                            <td>
-                                ${cantidad}
-                            </td>
-
-                            <td>
-                                $${valorUnitario.toLocaleString("es-CO")}
-                            </td>
-
-                            <td>
-                                $${valorTotal.toLocaleString("es-CO")}
-                            </td>
-
-                        </tr>
-
-                    </tbody>
+            <td>
+                $${Number(
+        mueble.valor || 0
+    ).toLocaleString("es-CO")}
+            </td>
+        </tr>
+    `).join("")}
+</tbody>
 
                 </table>
 

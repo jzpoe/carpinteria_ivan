@@ -6,18 +6,34 @@ export const generarCotizacion = async (req, res) => {
     try {
 
         const {
-            nombreMueble,
             cliente,
             descripcion,
-            cantidad,
-            valorUnitario,
-            valor
+            muebles
         } = req.body;
 
+        if (!muebles || muebles.length === 0) {
+            return res.status(400).json({
+                ok: false,
+                message: "La cotización debe tener al menos un mueble"
+            });
+        }
 
-        // Verificar que el cliente exista
+        const mueblesCalculados = muebles.map((mueble) => ({
+            nombre: mueble.nombre,
+            cantidad: Number(mueble.cantidad),
+            valorUnitario: Number(mueble.valorUnitario),
+            valor:
+                Number(mueble.cantidad) *
+                Number(mueble.valorUnitario)
+        }));
 
-        const encontrarCliente = await Cliente.findById(cliente);
+        const valorTotal = mueblesCalculados.reduce(
+            (total, mueble) => total + mueble.valor,
+            0
+        );
+
+        const encontrarCliente =
+            await Cliente.findById(cliente);
 
         if (!encontrarCliente) {
             return res.status(404).json({
@@ -26,21 +42,21 @@ export const generarCotizacion = async (req, res) => {
             });
         }
 
-
-        // Crear la cotización
+        const primerMueble = mueblesCalculados[0];
 
         const nuevaCotizacion = new Cotizaciones({
-            nombreMueble,
+            nombreMueble: primerMueble.nombre,
             cliente,
             descripcion,
-            cantidad,
-            valorUnitario,
-            valor
+
+            muebles: mueblesCalculados,
+
+            cantidad: primerMueble.cantidad,
+            valorUnitario: primerMueble.valorUnitario,
+            valor: valorTotal
         });
 
-
         await nuevaCotizacion.save();
-
 
         return res.status(201).json({
             ok: true,
@@ -48,13 +64,10 @@ export const generarCotizacion = async (req, res) => {
             nuevaCotizacion
         });
 
-
     } catch (error) {
-
         return res.status(400).json({
             ok: false,
             message: error.message
         });
-
     }
 };

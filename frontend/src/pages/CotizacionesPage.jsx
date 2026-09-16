@@ -430,9 +430,26 @@ function CotizacionesPage({ cerrarModal, cargarClientes }) {
                                     Mueble
                                 </p>
 
-                                <p className="text-gray-900 font-medium">
-                                    {cotizacion.nombreMueble}
-                                </p>
+                                <td className="px-6 py-4 text-gray-600">
+                                    {cotizacion.muebles?.length > 0 ? (
+                                        <div className="space-y-1">
+                                            {cotizacion.muebles.map((mueble, index) => (
+                                                <div key={index}>
+                                                    <span className="font-medium">
+                                                        {mueble.nombre}
+                                                    </span>
+
+                                                    <span className="text-sm text-gray-500 ml-2">
+                                                        ({mueble.cantidad} × $
+                                                        {mueble.valorUnitario.toLocaleString("es-CO")})
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        cotizacion.nombreMueble
+                                    )}
+                                </td>
 
                             </div>
 
