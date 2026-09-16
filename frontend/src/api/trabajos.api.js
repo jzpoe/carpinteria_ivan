@@ -10,10 +10,19 @@ export const obtenerTrabajos = async () => {
     return respuesta.data;
 };
 
-export const actualizarTrabajo = async (id, datosTrabajo) => {
+export const actualizarTrabajo = async (id, datos) => {
     const respuesta = await axios.put(
         `${API_URL}/trabajo/${id}`,
-        datosTrabajo
+        datos
+    );
+
+    return respuesta.data;
+};
+
+export const actualizarInventario = async (id, datos) => {
+    const respuesta = await axios.put(
+        `${API_URL}/inventario/${id}`,
+        datos
     );
 
     return respuesta.data;

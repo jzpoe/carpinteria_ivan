@@ -8,6 +8,7 @@ function InventarioPage() {
     const [inventario, setInventario] = useState([]);
     const [busqueda, setBusqueda] = useState("");
     const [modalInventario, setModalInventario] = useState(false);
+    const [inventarioEditar, setInventarioEditar] = useState(null);
 
     useEffect(() => {
         cargarInventario();
@@ -202,6 +203,10 @@ function InventarioPage() {
                                             <div className="flex justify-center gap-2">
 
                                                 <button
+                                                    onClick={() => {
+                                                        setInventarioEditar(item);
+                                                        setModalInventario(true);
+                                                    }}
                                                     type="button"
                                                     className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 cursor-pointer"
                                                     title="Editar"
@@ -254,6 +259,7 @@ function InventarioPage() {
                     <ModalInventario
                         cerrar={() => setModalInventario(false)}
                         cargarInventario={cargarInventario}
+                        inventarioEditar={inventarioEditar}
                     />
                 )}
 

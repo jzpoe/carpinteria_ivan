@@ -126,9 +126,8 @@ function ModalCotizacion({
                 );
 
             }
-
+            
             await cargarClientes();
-
             cerrarModal();
 
 

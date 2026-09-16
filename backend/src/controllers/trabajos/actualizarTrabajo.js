@@ -3,6 +3,7 @@ import Trabajo from "../../models/trabajo.models.js";
 export const actualizarTrabajo = async (req, res) => {
     try {
         const { id } = req.params;
+        console.log("ID recibido:", id);
 
         const {
             gastos = [],
@@ -10,7 +11,7 @@ export const actualizarTrabajo = async (req, res) => {
         } = req.body;
 
         const trabajo = await Trabajo.findById(id);
-
+        console.log("Trabajo encontrado:", trabajo);
         if (!trabajo) {
             return res.status(404).json({
                 ok: false,

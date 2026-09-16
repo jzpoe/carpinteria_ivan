@@ -19,6 +19,8 @@ import { registrarSalida } from "../controllers/inventario/regitrar_salida_inven
 import { obtenerInventario } from "../controllers/inventario/obtener_inventario.js";
 import { actualizarInventario } from "../controllers/inventario/actualizar_inventario.js";
 import { eliminarInventario } from "../controllers/inventario/eliminar_inventario.js";
+import { crearUsuario } from "../controllers/inicio-sesion/registro-usuario.controller.js";
+import { loginUsuario } from "../controllers/inicio-sesion/login-usuario.controlers.js";
 
 
 const router = express.Router();
@@ -68,6 +70,9 @@ router.get("/inventario", obtenerInventario);
 router.put("/inventario/:id", actualizarInventario);
 router.delete("/inventario/:id", eliminarInventario);
 
+//inicio sesión
+router.post("/usuario", crearUsuario);
+router.post("/login", loginUsuario);
 
 
 

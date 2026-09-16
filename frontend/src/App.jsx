@@ -1,5 +1,5 @@
 import './App.css'
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import ClientesPage from './pages/ClientesPage'
 import Sidebar from './components/Sidebar'
 import { Toaster } from "react-hot-toast";
@@ -7,42 +7,95 @@ import DashboardPage from './pages/DashboardPage';
 import CotizacionesPage from './pages/CotizacionesPage';
 import TrabajosPage from './pages/TrabajosPage';
 import InventarioPage from './pages/InventarioPage';
+import LoginPage from './pages/LoginPage';
+import RutaProtegida from './RutaProtegida';
 
+function AppContenido() {
 
-function App() {
+  const location = useLocation();
+
+  const estaEnLogin = location.pathname === "/login";
 
   return (
-    <>
-      <BrowserRouter>
+    <div className="flex w-full min-h-screen">
 
-        <Toaster position="top-right" />
+      {!estaEnLogin && <Sidebar />}
 
-        <div className="flex w-full min-h-screen">
+      <div className="flex-1 min-w-0 w-full">
+        <Routes>
 
-          <Sidebar />
+          <Route
+            path="/login"
+            element={<LoginPage />}
+          />
 
-          <div className="flex-1 min-w-0 w-full">
+          <Route
+            path="/"
+            element={
+              <RutaProtegida>
+                <DashboardPage />
+              </RutaProtegida>
+            }
+          />
 
-            <Routes>
+          <Route
+            path="/clientes"
+            element={
+              <RutaProtegida>
+                <ClientesPage />
+              </RutaProtegida>
+            }
+          />
 
-              <Route path="/" element={<DashboardPage />} />
+          <Route
+            path="/cotizaciones"
+            element={
+              <RutaProtegida>
+                <CotizacionesPage />
+              </RutaProtegida>
+            }
+          />
 
-              <Route path="/clientes" element={<ClientesPage />} />
+          <Route
+            path="/trabajos"
+            element={
+              <RutaProtegida>
+                <TrabajosPage />
+              </RutaProtegida>
+            }
+          />
 
-              <Route path="/cotizaciones" element={<CotizacionesPage />} />
+          <Route
+            path="/inventario"
+            element={
+              <RutaProtegida>
+                <InventarioPage />
+              </RutaProtegida>
+            }
+          />
 
-              <Route path="/trabajos" element={<TrabajosPage />} />
+        </Routes>
+      </div>
 
-              <Route path="/inventario" element={<InventarioPage />} />
-
-            </Routes>
-
-          </div>
-
-        </div>
-      </BrowserRouter >
-    </>
-  )
+    </div>
+  );
 }
+
+
+
+  function App() {
+    return (
+      <>
+        <BrowserRouter>
+
+          <Toaster position="top-right" />
+
+          <AppContenido />
+
+        </BrowserRouter>
+      </>
+    );
+  }
+
 
 export default App

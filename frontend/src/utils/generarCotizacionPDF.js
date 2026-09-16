@@ -39,7 +39,7 @@ export const generarCotizacionPDF = async (cotizacion) => {
 
     const datosBancarios =
         cotizacion.datosBancarios ||
-        "Innovaciones Arias - Bancolombia, cuenta de ahorros 80802666750";
+        "Ivan Arias - Bancolombia, cuenta de ahorros 80802666750";
 
 
     // ==========================================
@@ -399,16 +399,14 @@ export const generarCotizacionPDF = async (cotizacion) => {
                 <div class="contacto">
 
                     <span>
-                        ☎ 333 333 3333
+                        ☎ 314 5383537
                     </span>
 
                     <span>
                         📍 Calle 27 #43-33 Villa del Sur (Cali)
                     </span>
 
-                    <span>
-                        ✉ innovacionesarias@gmail.com
-                    </span>
+                    
 
                 </div>
 
@@ -453,7 +451,7 @@ export const generarCotizacionPDF = async (cotizacion) => {
                 Helvetica,
                 sans-serif;
 
-            font-size: 12px;
+            font-size: 14px;
 
         }
 
@@ -785,7 +783,7 @@ export const generarCotizacionPDF = async (cotizacion) => {
 
             border-top: 1px solid #e5e7eb;
 
-            font-size: 10px;
+            font-size: 11px;
 
         }
 
@@ -899,30 +897,23 @@ export const generarCotizacionPDF = async (cotizacion) => {
         /* ============================= */
 
         .condiciones {
-
-            padding: 11px 15px;
-
+            padding: 18px 18px;
             background: #f7f4f1;
-
             border-radius: 9px;
-
+            min-height: 145px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
 
         .condicion {
-
             display: grid;
-
-            grid-template-columns: 120px 1fr;
-
-            gap: 8px;
-
-            margin-bottom: 7px;
-
-            font-size: 9px;
-
-            line-height: 1.35;
-
+            grid-template-columns: 135px 1fr;
+            gap: 10px;
+            margin-bottom: 11px;
+            font-size: 15px;
+            line-height: 1.45;
         }
 
 
@@ -952,24 +943,17 @@ export const generarCotizacionPDF = async (cotizacion) => {
         /* ============================= */
 
         footer {
-
-            margin-top: 15px;
-
-            padding-top: 10px;
-
+            margin-top: 20px;
+            padding-top: 14px;
             border-top: 1px solid #e5ded8;
-
         }
 
 
         .contacto {
 
             display: flex;
-
             justify-content: space-between;
-
-            font-size: 7px;
-
+            font-size: 16px;
             color: #777;
 
         }
@@ -977,18 +961,12 @@ export const generarCotizacionPDF = async (cotizacion) => {
 
         .mensaje-final {
 
-            margin-top: 9px;
-
-            padding: 7px;
-
+            margin-top: 12px;
+            padding: 10px;
             text-align: center;
-
             background: #f4eee8;
-
             color: #765033;
-
-            font-size: 7px;
-
+            font-size: 9px;
             letter-spacing: 2px;
 
         }

@@ -317,13 +317,13 @@ function CotizacionesPage({ cerrarModal, cargarClientes }) {
                                                 <Trash2 size={18} />
                                             </button>
 
-                                            <button
+                                            {/* <button
                                                 onClick={() => setCotizacionVer(cotizacion)}
                                                 className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer"
                                                 title="Ver cotización"
                                             >
                                                 <Eye size={18} />
-                                            </button>
+                                            </button> */}
 
                                             {cotizacion.estado === "Aceptada" && (
                                                 <button
@@ -640,6 +640,8 @@ function CotizacionesPage({ cerrarModal, cargarClientes }) {
                     cliente={cotizacionEditar.cliente}
                     cotizacionEditar={cotizacionEditar}
                     cerrarModal={() => setCotizacionEditar(null)}
+                    cargarCotizaciones={cargarCotizaciones}
+
                 />
             )}
 

@@ -46,21 +46,23 @@ function ClientesPage() {
         setModalAbierto(false)
     }
 
-    useEffect(() => {
-        cargarClientes();
-    }, []);
+
 
     async function cargarClientes() {
         try {
-            const respuesta = await obtenerClientes();
+            const data = await obtenerClientes();
 
 
-            setClientes(respuesta.clientes);
+            setClientes(data.clientes);
 
         } catch (error) {
             console.error(error);
         }
     }
+
+    useEffect(() => {
+        cargarClientes();
+    }, []);
 
     const clientesFiltrados = clientes.filter((cliente) =>
         `${cliente.nombre} ${cliente.telefono} ${cliente.correo || ""}`
@@ -162,7 +164,7 @@ function ClientesPage() {
 
                                             <>
                                                 {/* Ver cotización */}
-                                                <button
+                                                {/* <button
                                                     onClick={() =>
                                                         setCotizacionVer(cliente.cotizacion)
                                                     }
@@ -170,7 +172,7 @@ function ClientesPage() {
                                                     title="Ver cotización"
                                                 >
                                                     <Eye size={18} />
-                                                </button>
+                                                </button> */}
 
                                                 {/* Editar cotización */}
                                                 {cliente.estadoCotizacion === "Pendiente" && (
@@ -188,7 +190,7 @@ function ClientesPage() {
                                                 )}
 
                                                 {/* Generar PDF */}
-                                                <button
+                                                {/* <button
                                                     onClick={() =>
                                                         generarCotizacionPDF(cliente.cotizacion)
                                                     }
@@ -196,7 +198,7 @@ function ClientesPage() {
                                                     title="Generar PDF"
                                                 >
                                                     <FileText size={18} />
-                                                </button>
+                                                </button> */}
                                             </>
 
                                         )}

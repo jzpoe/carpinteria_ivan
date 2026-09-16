@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { crearInventario } from "../../api/inventario.api";
 import toast from "react-hot-toast";
+import { actualizarInventario } from "../../api/trabajos.api";
 
-function ModalInventario({ cerrar, cargarInventario }) {
+function ModalInventario({ cerrar, cargarInventario, inventarioEditar }) {
     const [formulario, setFormulario] = useState({
         nombre: "",
         categoria: "",
@@ -11,19 +12,44 @@ function ModalInventario({ cerrar, cargarInventario }) {
         costoUnitario: ""
     });
 
+    useEffect(() => {
+        if (inventarioEditar) {
+            setFormulario({
+                nombre: inventarioEditar.nombre,
+                categoria: inventarioEditar.categoria,
+                cantidad: inventarioEditar.cantidad,
+                unidad: inventarioEditar.unidad,
+                costoUnitario: inventarioEditar.costoUnitario
+            });
+        }
+    }, [inventarioEditar]);
+
     const guardarInventario = async () => {
         try {
 
-            await crearInventario({
+            const datos = {
                 ...formulario,
                 cantidad: Number(formulario.cantidad),
                 costoUnitario: Number(formulario.costoUnitario)
-            });
+            };
 
-            toast.success("Material agregado correctamente");
+            if (inventarioEditar) {
+
+                await actualizarInventario(
+                    inventarioEditar._id,
+                    datos
+                );
+
+                toast.success("Material actualizado correctamente");
+
+            } else {
+
+                await crearInventario(datos);
+
+                toast.success("Material agregado correctamente");
+            }
 
             await cargarInventario();
-
             cerrar();
 
         } catch (error) {
@@ -45,7 +71,7 @@ function ModalInventario({ cerrar, cargarInventario }) {
                 <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
 
                     <h2 className="text-xl font-semibold text-gray-900">
-                        Nuevo material
+                        {inventarioEditar ? "Editar material" : "Nuevo material"}
                     </h2>
 
                     <button
