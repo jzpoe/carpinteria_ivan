@@ -16,3 +16,38 @@ export const crearInventario = async (datos) => {
 
     return respuesta.data;
 };
+
+export const actualizarInventario = async (id, datos) => {
+    const respuesta = await axios.put(
+        `${API_URL}/inventario/${id}`,
+        datos
+    );
+
+    return respuesta.data;
+};
+
+export const registrarEntrada = async (id, cantidad) => {
+    const respuesta = await axios.put(
+        `${API_URL}/inventario/${id}/entrada`,
+        { cantidad }
+    );
+
+    return respuesta.data;
+};
+
+export const registrarSalida = async (id, cantidad) => {
+    const respuesta = await axios.put(
+        `${API_URL}/inventario/${id}/salida`,
+        { cantidad }
+    );
+
+    return respuesta.data;
+};
+
+export const eliminarInventario = async (id) => {
+    const respuesta = await axios.delete(
+        `${API_URL}/inventario/${id}`
+    );
+
+    return respuesta.data;
+};

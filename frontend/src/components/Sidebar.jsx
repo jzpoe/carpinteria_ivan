@@ -49,10 +49,10 @@ function Sidebar() {
                         <li>
 
                             <Link
-    to="/"
-    onClick={() => setMenuAbierto(false)}
-    className="flex items-center gap-3 p-3 rounded hover:bg-gray-700"
->
+                                to="/"
+                                onClick={() => setMenuAbierto(false)}
+                                className="flex items-center gap-3 p-3 rounded hover:bg-gray-700"
+                            >
                                 <LayoutDashboard size={20} />
                                 Dashboard
                             </Link>
@@ -90,7 +90,17 @@ function Sidebar() {
 
                     </ul>
                 </nav>
-
+                <button
+                    type="button"
+                    onClick={() => {
+                        localStorage.removeItem("token");
+                        localStorage.removeItem("usuario");
+                        window.location.href = "/login";
+                    }}
+                    className="mt-8 w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-red-600 hover:bg-red-700 text-white cursor-pointer"
+                >
+                    Cerrar sesión
+                </button>
             </aside>
         </>
     )

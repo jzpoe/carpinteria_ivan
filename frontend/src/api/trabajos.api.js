@@ -19,11 +19,3 @@ export const actualizarTrabajo = async (id, datos) => {
     return respuesta.data;
 };
 
-export const actualizarInventario = async (id, datos) => {
-    const respuesta = await axios.put(
-        `${API_URL}/inventario/${id}`,
-        datos
-    );
-
-    return respuesta.data;
-};

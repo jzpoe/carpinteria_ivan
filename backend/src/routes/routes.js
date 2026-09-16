@@ -66,6 +66,7 @@ router.post("/inventario", crearInventario);
 
 router.put("/inventario/:id/entrada", registrarEntrada);
 router.put("/inventario/:id/salida", registrarSalida);
+
 router.get("/inventario", obtenerInventario);
 router.put("/inventario/:id", actualizarInventario);
 router.delete("/inventario/:id", eliminarInventario);

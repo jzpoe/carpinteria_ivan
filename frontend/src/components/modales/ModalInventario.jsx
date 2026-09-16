@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { crearInventario } from "../../api/inventario.api";
+import {
+    crearInventario,
+    actualizarInventario
+} from "../../api/inventario.api";
 import toast from "react-hot-toast";
-import { actualizarInventario } from "../../api/trabajos.api";
 
 function ModalInventario({ cerrar, cargarInventario, inventarioEditar }) {
     const [formulario, setFormulario] = useState({
@@ -135,17 +137,18 @@ function ModalInventario({ cerrar, cargarInventario, inventarioEditar }) {
                             </label>
 
                             <input
-                                type="text"
-                                placeholder="Ej: 100"
-                                value={formulario.cantidad}
-                                onChange={(e) =>
-                                    setFormulario({
-                                        ...formulario,
-                                        cantidad: e.target.value
-                                    })
-                                }
-                                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
-                            />
+    type="text"
+    placeholder="Ej: 100"
+    value={formulario.cantidad}
+    onChange={(e) =>
+        setFormulario({
+            ...formulario,
+            cantidad: e.target.value
+        })
+    }
+    disabled={inventarioEditar}
+    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg disabled:bg-gray-100 disabled:text-gray-500"
+/>
                         </div>
 
                         <div>

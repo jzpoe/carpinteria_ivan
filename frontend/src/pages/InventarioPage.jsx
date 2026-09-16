@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Pencil, Trash2, ArrowDownToLine, ArrowUpFromLine } from "lucide-react";
-import { obtenerInventario } from "../api/inventario.api";
+import { obtenerInventario, eliminarInventario } from "../api/inventario.api";
 import ModalInventario from "../components/modales/ModalInventario";
+import ModalMovimientoInventario from "../components/modales/ModalMovimientoInventario";
+import ModalConfirmacion from "../components/modales/ModalConfirmacion";
+import toast from "react-hot-toast";
+
 
 function InventarioPage() {
 
@@ -9,6 +13,11 @@ function InventarioPage() {
     const [busqueda, setBusqueda] = useState("");
     const [modalInventario, setModalInventario] = useState(false);
     const [inventarioEditar, setInventarioEditar] = useState(null);
+    const [modalMovimiento, setModalMovimiento] = useState(false);
+    const [tipoMovimiento, setTipoMovimiento] = useState("");
+    const [inventarioMovimiento, setInventarioMovimiento] = useState(null);
+    const [modalConfirmacion, setModalConfirmacion] = useState(false);
+    const [inventarioEliminar, setInventarioEliminar] = useState(null);
 
     useEffect(() => {
         cargarInventario();
@@ -216,6 +225,10 @@ function InventarioPage() {
 
                                                 <button
                                                     type="button"
+                                                    onClick={() => {
+                                                        setInventarioEliminar(item);
+                                                        setModalConfirmacion(true);
+                                                    }}
                                                     className="p-2 rounded-lg hover:bg-red-100 text-red-600 cursor-pointer"
                                                     title="Eliminar"
                                                 >
@@ -224,6 +237,11 @@ function InventarioPage() {
 
                                                 <button
                                                     type="button"
+                                                    onClick={() => {
+                                                        setTipoMovimiento("Entrada");
+                                                        setInventarioMovimiento(item);
+                                                        setModalMovimiento(true);
+                                                    }}
                                                     className="p-2 rounded-lg hover:bg-green-100 text-green-600 cursor-pointer"
                                                     title="Registrar entrada"
                                                 >
@@ -232,6 +250,11 @@ function InventarioPage() {
 
                                                 <button
                                                     type="button"
+                                                    onClick={() => {
+                                                        setTipoMovimiento("Salida");
+                                                        setInventarioMovimiento(item);
+                                                        setModalMovimiento(true);
+                                                    }}
                                                     className="p-2 rounded-lg hover:bg-orange-100 text-orange-600 cursor-pointer"
                                                     title="Registrar salida"
                                                 >
@@ -263,7 +286,41 @@ function InventarioPage() {
                     />
                 )}
 
+                {modalMovimiento && (
+                    <ModalMovimientoInventario
+                        cerrar={() => setModalMovimiento(false)}
+                        tipo={tipoMovimiento}
+                        inventario={inventarioMovimiento}
+                        cargarInventario={cargarInventario}
+                    />
+                )}
 
+                {modalConfirmacion && (
+                    <ModalConfirmacion
+                        cerrar={() => {
+                            setModalConfirmacion(false);
+                            setInventarioEliminar(null);
+                        }}
+                        confirmar={async () => {
+                            try {
+                                await eliminarInventario(inventarioEliminar._id);
+
+                                toast.success("Material eliminado correctamente");
+
+                                await cargarInventario();
+
+                                setModalConfirmacion(false);
+                                setInventarioEliminar(null);
+
+                            } catch (error) {
+                                toast.error(
+                                    error.response?.data?.message ||
+                                    "No se pudo eliminar el material"
+                                );
+                            }
+                        }}
+                    />
+                )}
 
 
             </main>

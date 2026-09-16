@@ -16,6 +16,29 @@ const cotizacionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    muebles: [
+        {
+            nombre: {
+                type: String,
+                required: true
+            },
+            cantidad: {
+                type: Number,
+                required: true,
+                min: 1
+            },
+            valorUnitario: {
+                type: Number,
+                required: true,
+                min: 0
+            },
+            valor: {
+                type: Number,
+                required: true,
+                min: 0
+            }
+        }
+    ],
 
     cantidad: {
         type: Number,
