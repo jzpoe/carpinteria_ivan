@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3001/carpinteria";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const loginUsuario = async (datos) => {
     const respuesta = await axios.post(
