@@ -50,7 +50,7 @@ function CotizacionesPage({ cerrarModal, cargarClientes }) {
     useEffect(() => {
         cargarCotizaciones();
         cargarTrabajos();
-    }, []);
+    }, [obtenerCotizaciones]);
 
     async function aceptarCotizacionSeleccionada(id) {
         try {
@@ -658,7 +658,7 @@ function CotizacionesPage({ cerrarModal, cargarClientes }) {
                     cotizacionEditar={cotizacionEditar}
                     cerrarModal={() => setCotizacionEditar(null)}
                     cargarCotizaciones={cargarCotizaciones}
-
+                    cargarClientes={cargarClientes}
                 />
             )}
 

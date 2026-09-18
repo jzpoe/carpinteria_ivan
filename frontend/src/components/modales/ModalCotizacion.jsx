@@ -10,7 +10,7 @@ function ModalCotizacion({
     cliente,
     cerrarModal,
     cotizacionEditar,
-    cargarClientes
+    cargarClientes, cargarCotizaciones
 }) {
 
     const [formulario, setFormulario] = useState({
@@ -152,9 +152,13 @@ function ModalCotizacion({
                     datosCotizacion
                 );
 
+
+
                 toast.success(
                     "¡Cotización actualizada con éxito!"
                 );
+                cargarCotizaciones()
+                cerrarModal()
 
             } else {
 
@@ -162,13 +166,20 @@ function ModalCotizacion({
                     datosCotizacion
                 );
 
+                cargarClientes()
+                cerrarModal()
+
                 toast.success(
                     "¡Cotización creada con éxito!"
                 );
+
+
             }
 
-            await cargarClientes();
-            cerrarModal();
+
+
+
+
 
         } catch (error) {
 
@@ -188,6 +199,7 @@ function ModalCotizacion({
             }
         }
     }
+
 
 
     return (

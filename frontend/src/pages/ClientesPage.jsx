@@ -175,7 +175,7 @@ function ClientesPage() {
                                                 </button> */}
 
                                                 {/* Editar cotización */}
-                                                {cliente.estadoCotizacion === "Pendiente" && (
+                                                {/* {cliente.estadoCotizacion === "Pendiente" && (
                                                     <button
                                                         onClick={() => {
                                                             setCotizacionEditar(cliente.cotizacion);
@@ -187,7 +187,7 @@ function ClientesPage() {
                                                     >
                                                         <Pencil size={18} />
                                                     </button>
-                                                )}
+                                                )} */}
 
                                                 {/* Generar PDF */}
                                                 {/* <button
