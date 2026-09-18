@@ -175,19 +175,8 @@ function ClientesPage() {
                                                 </button> */}
 
                                                 {/* Editar cotización */}
-                                                {/* {cliente.estadoCotizacion === "Pendiente" && (
-                                                    <button
-                                                        onClick={() => {
-                                                            setCotizacionEditar(cliente.cotizacion);
-                                                            setClienteSeleccionado(cliente);
-                                                            setModalCotizacionAbierto(true);
-                                                        }}
-                                                        className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer"
-                                                        title="Editar cotización"
-                                                    >
-                                                        <Pencil size={18} />
-                                                    </button>
-                                                )} */}
+                                                
+                                                
 
                                                 {/* Generar PDF */}
                                                 {/* <button
